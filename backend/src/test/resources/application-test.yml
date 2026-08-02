@@ -1,0 +1,13 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate.default_schema: upadhya
+  flyway:
+    schemas: upadhya
+    default-schema: upadhya
+    create-schemas: true
+upadhya:
+  textbook:
+    max-pdf-size-bytes: 52428800

@@ -1,0 +1,58 @@
+spring:
+  application:
+    name: upadhya
+  profiles:
+    default: local
+  servlet:
+    multipart:
+      max-file-size: ${UPADHYA_MAX_PDF_SIZE:50MB}
+      max-request-size: ${UPADHYA_MAX_PDF_SIZE:50MB}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate.default_schema: ${UPADHYA_POSTGRES_SCHEMA:upadhya}
+  flyway:
+    enabled: true
+    schemas: ${UPADHYA_POSTGRES_SCHEMA:upadhya}
+    default-schema: ${UPADHYA_POSTGRES_SCHEMA:upadhya}
+    create-schemas: true
+
+server:
+  port: ${UPADHYA_SERVER_PORT:8091}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+upadhya:
+  textbook:
+    upload-dir: ${UPADHYA_TEXTBOOK_UPLOAD_DIR:./runtime/upadhya/textbooks}
+    max-pdf-size-bytes: ${UPADHYA_MAX_PDF_SIZE_BYTES:52428800}
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} level=%-5level logger=%logger{36} message=%msg%n"
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:postgresql://localhost:${UPADHYA_POSTGRES_HOST_PORT:55433}/${UPADHYA_POSTGRES_DB:upadhya_db}
+    username: ${UPADHYA_POSTGRES_USER:upadhya_user}
+    password: ${UPADHYA_POSTGRES_PASSWORD}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+  datasource:
+    url: jdbc:postgresql://upadhya-postgres:5432/${UPADHYA_POSTGRES_DB:upadhya_db}
+    username: ${UPADHYA_POSTGRES_USER:upadhya_user}
+    password: ${UPADHYA_POSTGRES_PASSWORD}
